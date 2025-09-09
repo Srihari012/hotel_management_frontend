@@ -4,6 +4,8 @@ import Home from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 import PrivateRoute from './components/PrivateRoute';
+import PropertyAdministration from './pages/PropertyAdministration';
+import ManageRooms from './pages/ManageRooms';
 
 
 const App = () => {
@@ -19,6 +21,8 @@ const App = () => {
           } />
           <Route path='/login' element={ <LoginPage />}></Route>
           <Route path='/register' element={ <RegistrationPage />}></Route>
+          <Route path='/administration' element={ <PropertyAdministration />}></Route>
+          <Route path='/administration/rooms' element={ <ManageRooms />} ></Route>
         </Routes>
       </Router>
       
