@@ -4,6 +4,7 @@ import AddBranch from '../components/AddBranch'
 import DeleteConfirmation from '../components/DeleteConfirmation';
 import UpdateBranch from '../components/UpdateBranch';
 import { useNavigate } from 'react-router-dom';
+import leftarrow from '../assets/leftarrow.png'
 
 const PropertyAdministration = () => {
 
@@ -39,7 +40,6 @@ const PropertyAdministration = () => {
       setBranches(response.data);
     } catch (error) {
       console.error('Error fetching branches:', error);
-      alert('Failed to fetch branches');
     }
   };
 
@@ -47,7 +47,8 @@ const PropertyAdministration = () => {
     try {
       await axios.delete(`http://localhost:8080/hotel/branch?branchId=${selectedBranchId}`);
       setBranches(branches.filter(branch => branch.branchId !== selectedBranchId))
-      setSelectedBranchId(branch.branchId)
+      setSelectedBranchId(null);
+      toggleDeleteConfirm();
     } catch (error) {
       console.error("Error deleting branch:", error);
     }
@@ -56,6 +57,9 @@ const PropertyAdministration = () => {
 
   return (
     <div className="h-screen w-screen p-6 bg-gray-300">
+      <div className='flex flex-row justify-start items-center gap-3 mb-6 cursor-pointer' onClick={() => window.history.back()}>
+        <img src={leftarrow} alt="" className='h-13 w-18 bg-gray-400 p-2 px-3 rounded' />
+      </div>
       <div className="grid gap-6 
                       grid-cols-1 
                       sm:grid-cols-2 
@@ -91,8 +95,9 @@ const PropertyAdministration = () => {
               </button>
               <button className="bg-red-500 hover:bg-red-600 text-white p-[7px] rounded w-full" 
                 onClick={() =>{
+                  setSelectedBranchId(branch.branchId)
                   toggleDeleteConfirm()
-                  setSelectedBranchId(branch.id)}}>
+                  }}>
                 Delete
               </button>
             </div>
@@ -116,7 +121,7 @@ const PropertyAdministration = () => {
         </div>
       </div>
 
-      {isAddBranchOpen && <AddBranch onClose={toggleAddBranch} />}
+      {isAddBranchOpen && <AddBranch onClose={toggleAddBranch} fetchBranches={fetchBranches}/>}
 
       {isDeleteConfirmOpen && <DeleteConfirmation toggleDeleteConfirm={toggleDeleteConfirm} handleDelete={handleDelete}/> }
 

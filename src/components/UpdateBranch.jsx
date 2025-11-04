@@ -14,13 +14,11 @@ const UpdateBranch = ({toggleUpdateBranch,selectedBranch,fetchBranches}) => {
     try {
         const response = await axios.put('http://localhost:8080/hotel/branch', branch);
         if (response.status === 200) {
-        alert("Branch updated successfully");
         fetchBranches();
         toggleUpdateBranch();
         }
     } catch (error) {
         console.error(error);
-        alert("Failed to update branch");
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar';
+import HomeContent from './HomeContent';
 
 const Home = () => {
 
@@ -15,6 +16,7 @@ const Home = () => {
   return (
     <div className='container h-screen mx-auto p-1 scrollbar-hide'>
       <Navbar toggleMenu={toggleMenu}/>
+      <HomeContent />
       {isMenuOpen && <Sidebar toggleMenu={toggleMenu} username={currentUser.username}/>} 
     </div>
   )

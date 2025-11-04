@@ -66,7 +66,6 @@ const AddRoom = ({ branchId, fetchRooms, toggleAddRoom }) => {
       setRoom({ ...room, imageUrl: res.data.url });
     } catch (err) {
       console.error("Image upload failed:", err);
-      alert("Failed to upload image");
     }
   };
 
@@ -75,15 +74,13 @@ const AddRoom = ({ branchId, fetchRooms, toggleAddRoom }) => {
     try {
       const response = await axios.post("http://localhost:8080/hotel/room", room);
       if (response.status === 201 || response.status === 200) {
-        alert("Room added successfully!");
         fetchRooms();
         toggleAddRoom();
       } else {
-        alert("Failed to add room");
+        console.error("Failed to add room:", response);
       }
     } catch (err) {
       console.error(err);
-      alert("Error adding room");
     }
   };
 

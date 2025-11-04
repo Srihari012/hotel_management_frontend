@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } f
 
 const Sidebar = ({toggleMenu,username}) => {
 
-    const navigate = useNavigate()
+  const navigate = useNavigate()
+  const role = JSON.parse(localStorage.getItem('user')).role;
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -34,10 +35,33 @@ const Sidebar = ({toggleMenu,username}) => {
             <h2 className='text-center text-gray-800 font-bold text-2xl mt-4 mb-10'>{username}</h2>
 
             <ul>
-                <li className='mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900'>My Reservations</li>
-                <li className='mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900' onClick={() => navigate('/administration')}>Property Administration</li>
-                <li className='mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900'>All Reservations</li>
-                <li className='mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900'>Reports</li>
+                <li 
+                    className='mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900' 
+                    onClick={() => navigate('/MyReservations')}>
+                        My Reservations
+                </li>
+                {role === "ADMIN" && (
+                    <>
+                    <li
+                        className="mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900"
+                        onClick={() => navigate("/administration")}
+                    >
+                        Property Administration
+                    </li>
+                    <li
+                        className="mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900"
+                        onClick={() => navigate("/allreservations")}
+                    >
+                        All Reservations
+                    </li>
+                    <li
+                        className="mb-6 text-gray-700 font-semibold text-lg cursor-pointer hover:text-gray-900"
+                        onClick={() => navigate("/reports")}
+                    >
+                        Reports
+                    </li>
+                    </>
+                )}
             </ul>
 
 

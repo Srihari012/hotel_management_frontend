@@ -6,6 +6,10 @@ import RegistrationPage from './pages/RegistrationPage';
 import PrivateRoute from './components/PrivateRoute';
 import PropertyAdministration from './pages/PropertyAdministration';
 import ManageRooms from './pages/ManageRooms';
+import BookingPage from './pages/BookingPage';
+import MyReservations from './pages/MyReservations';
+import AllReservations from './pages/AllReservations';
+import Reports from './pages/Reports';
 
 
 const App = () => {
@@ -23,6 +27,10 @@ const App = () => {
           <Route path='/register' element={ <RegistrationPage />}></Route>
           <Route path='/administration' element={ <PropertyAdministration />}></Route>
           <Route path='/administration/rooms' element={ <ManageRooms />} ></Route>
+          <Route path="/Booking" element={ <BookingPage /> }></Route>
+          <Route path='/MyReservations' element={ <MyReservations /> }></Route>
+          <Route path='/allreservations' element={ <AllReservations /> }></Route>
+          <Route path='/reports' element={ <Reports /> }></Route>
         </Routes>
       </Router>
       

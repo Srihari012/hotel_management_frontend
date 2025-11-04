@@ -5,6 +5,7 @@ import AddRoom from "../components/AddRoom";
 import UpdateRoom from "../components/UpdateRoom";
 import axios from "axios";
 import RoomDeleteConfirmation from "../components/RoomDeleteConfirmation";
+import leftarrow from "../assets/leftarrow.png";
 
 const ManageRooms = () => {
   const location = useLocation();
@@ -51,7 +52,6 @@ const ManageRooms = () => {
       toggleDeleteConfirm();
     } catch (error) {
       console.error("Error deleting room:", error);
-      alert("Failed to delete room");
     }
   };
 
@@ -63,6 +63,9 @@ const ManageRooms = () => {
   return (
     <div className="container min-h-screen mx-auto p-1">
       <div className="fixed top-0 left-0 w-full bg-gray-400 rounded-b-2xl p-4 shadow-lg z-10">
+        <div className="absolute left-4 top-4 cursor-pointer" onClick={() => window.history.back()}>
+          <img src={leftarrow} alt="leftarrow" className="w-7 h-13 pt-5" />
+        </div>
         <div className="text-center">
           <h1 className="text-4xl font-serif text-white font-extrabold">
             {branch.name}

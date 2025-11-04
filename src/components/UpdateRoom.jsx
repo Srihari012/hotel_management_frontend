@@ -43,15 +43,13 @@ const UpdateRoom = ({ selectedRoom, toggleUpdateRoom, fetchRooms }) => {
     try {
         const response = await axios.put('http://localhost:8080/hotel/room',room);
         if (response.status === 200) {
-            alert("Room updated successfully!");
             fetchRooms();
             toggleUpdateRoom();
         } else {
-            alert("Failed to update room");
+            console.error("Failed to update room:", response);
         }
     } catch (err) {
         console.error(err);
-        alert("Error updating room");
     }
     };
 
@@ -147,16 +145,6 @@ const UpdateRoom = ({ selectedRoom, toggleUpdateRoom, fetchRooms }) => {
               ))}
             </div>
           </div>
-
-          {/* Image URL */}
-          <input
-            type="text"
-            name="imageUrl"
-            value={room.imageUrl}
-            onChange={handleChange}
-            placeholder="Image URL"
-            className="w-full border border-gray-300 rounded-lg p-2"
-          />
 
           {/* Status Dropdown */}
           <select
