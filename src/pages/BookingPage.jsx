@@ -15,11 +15,8 @@ const BookingPage = () => {
   const [checkOut, setCheckOut] = useState("");
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  // 🔹 Popup state
   const [popup, setPopup] = useState({ show: false, type: "", message: "" });
 
-  // Function to show popup
   const showPopup = (type, message) => {
     setPopup({ show: true, type, message });
     setTimeout(() => setPopup({ show: false, type: "", message: "" }), 2500);
@@ -27,7 +24,7 @@ const BookingPage = () => {
 
   const handleBooking = (room) => {
     axios
-      .post("http://localhost:8080/hotel/booking/bookroom", {
+      .post("https://hotel-management-backend-7yq5.onrender.com/hotel/booking/bookroom", {
         userId: JSON.parse(localStorage.getItem("user")).userId,
         roomId: room.roomId,
         roomNo: room.roomNo,
@@ -49,7 +46,7 @@ const BookingPage = () => {
 
   const fetchBranches = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/hotel/branch");
+      const response = await axios.get("https://hotel-management-backend-7yq5.onrender.com/hotel/branch");
       setBranches(response.data);
     } catch (error) {
       console.error("Error fetching branches:", error);
@@ -77,7 +74,7 @@ const BookingPage = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:8080/hotel/room/availablerooms",
+        "https://hotel-management-backend-7yq5.onrender.com/hotel/room/availablerooms",
         {
           params: {
             branchId: selectedHotel,
@@ -99,7 +96,6 @@ const BookingPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-yellow-100 to-gray-200 px-4 py-10">
-      {/* MAIN CARD */}
       <motion.div
         className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-xl text-center"
         initial={{ opacity: 0, y: 60, scale: 0.9 }}
@@ -212,8 +208,26 @@ const BookingPage = () => {
         </motion.button>
       </motion.div>
 
+      {/* 🔹 Loading Animation */}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            className="flex flex-col items-center justify-center mt-16 text-gray-700"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-4"
+              transition={{ repeat: Infinity, duration: 1 }}
+            ></motion.div>
+            <p className="text-lg font-semibold">Fetching available rooms...</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Rooms grid */}
-      {rooms.length > 0 && (
+      {!loading && rooms.length > 0 && (
         <motion.div
           className="mt-12 w-full max-w-6xl bg-white rounded-3xl shadow-xl p-10 relative"
           initial={{ opacity: 0, y: 40 }}
@@ -266,7 +280,6 @@ const BookingPage = () => {
           <AnimatePresence>
             {expandedRoom && (
               <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                {/* Background */}
                 <motion.div
                   className="absolute inset-0 backdrop-blur-lg bg-black/40"
                   initial={{ opacity: 0 }}
@@ -274,7 +287,6 @@ const BookingPage = () => {
                   exit={{ opacity: 0 }}
                   onClick={() => setExpandedRoom(null)}
                 />
-
                 <motion.div
                   layoutId={`room-card-${expandedRoom.roomId}`}
                   className="relative bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-2xl max-h-[90vh] overflow-y-auto"
@@ -284,16 +296,13 @@ const BookingPage = () => {
                     src={expandedRoom.imageUrl || fallbackImage}
                     className="w-full h-64 object-cover"
                   />
-
                   <div className="p-8">
                     <h2 className="text-3xl font-bold">
                       Room {expandedRoom.roomNo} • {expandedRoom.name}
                     </h2>
-
                     <p className="text-gray-700 mt-3">
                       {expandedRoom.description}
                     </p>
-
                     {expandedRoom.amenities?.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-4">
                         {expandedRoom.amenities.map((a, i) => (
@@ -306,12 +315,10 @@ const BookingPage = () => {
                         ))}
                       </div>
                     )}
-
                     <p className="text-2xl font-semibold mt-5">
                       ₹{expandedRoom.price}
                       <span className="text-gray-500 text-sm"> / night</span>
                     </p>
-
                     <div className="flex items-center gap-4 mt-6">
                       <button
                         onClick={() => setExpandedRoom(null)}
@@ -319,16 +326,14 @@ const BookingPage = () => {
                       >
                         Close
                       </button>
-
                       <button
                         onClick={() => handleBooking(expandedRoom)}
                         disabled={expandedRoom.status === "Occupied"}
-                        className={`py-3 px-5 rounded-xl text-lg font-semibold transition 
-                          ${
-                            expandedRoom.status === "Vacant"
-                              ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
-                              : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                          }`}
+                        className={`py-3 px-5 rounded-xl text-lg font-semibold transition ${
+                          expandedRoom.status === "Vacant"
+                            ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
+                            : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                        }`}
                       >
                         {expandedRoom.status === "Vacant"
                           ? "Book Now"
@@ -343,7 +348,7 @@ const BookingPage = () => {
         </motion.div>
       )}
 
-      {/* ✅ Popup Component */}
+      {/* ✅ Popup */}
       <AnimatePresence>
         {popup.show && (
           <motion.div

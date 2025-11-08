@@ -8,6 +8,7 @@ const RegistrationPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [popup, setPopup] = useState({ show: false, type: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -34,11 +35,11 @@ const RegistrationPage = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/hotel/user/register", {
-        username,
-        email,
-        password,
-      });
+      setLoading(true);
+      const response = await axios.post(
+        "https://hotel-management-backend-7yq5.onrender.com/hotel/user/register",
+        { username, email, password }
+      );
 
       if (response.status === 201) {
         showPopup("success", "✅ Registration Successful! Please login.");
@@ -53,6 +54,8 @@ const RegistrationPage = () => {
       } else {
         showPopup("error", "❌ Something went wrong. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,12 +96,27 @@ const RegistrationPage = () => {
         />
 
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-sky-900 hover:bg-sky-800 p-4 rounded-2xl text-white font-serif font-semibold transition"
+          whileHover={!loading ? { scale: 1.05 } : {}}
+          whileTap={!loading ? { scale: 0.95 } : {}}
+          disabled={loading}
           onClick={handleRegister}
+          className={`p-4 rounded-2xl text-white font-serif font-semibold transition flex items-center justify-center gap-2 ${
+            loading
+              ? "bg-sky-700 cursor-not-allowed opacity-80"
+              : "bg-sky-900 hover:bg-sky-800"
+          }`}
         >
-          Sign Up
+          {loading ? (
+            <>
+              <motion.div
+                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                transition={{ repeat: Infinity, duration: 1 }}
+              ></motion.div>
+              Signing up...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </motion.button>
 
         <p className="text-sm text-gray-700 mt-2 text-center">
@@ -112,7 +130,6 @@ const RegistrationPage = () => {
         </p>
       </motion.div>
 
-      
       <AnimatePresence>
         {popup.show && (
           <motion.div

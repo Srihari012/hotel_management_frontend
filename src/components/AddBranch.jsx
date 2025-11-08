@@ -12,6 +12,7 @@ const AddBranch = ({ onClose, fetchBranches }) => {
   });
 
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [popup, setPopup] = useState({ show: false, type: "", message: "" });
 
   const showPopup = (type, message) => {
@@ -51,13 +52,22 @@ const AddBranch = ({ onClose, fetchBranches }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!branch.name || !branch.location || !branch.address || !branch.contactNumber) {
+    if (
+      !branch.name ||
+      !branch.location ||
+      !branch.address ||
+      !branch.contactNumber
+    ) {
       showPopup("warning", "⚠️ Please fill all required fields.");
       return;
     }
 
     try {
-      await axios.post("http://localhost:8080/hotel/branch", branch);
+      setSaving(true);
+      await axios.post(
+        "https://hotel-management-backend-7yq5.onrender.com/hotel/branch",
+        branch
+      );
       showPopup("success", "✅ Branch added successfully!");
       setTimeout(() => {
         fetchBranches();
@@ -66,6 +76,8 @@ const AddBranch = ({ onClose, fetchBranches }) => {
     } catch (error) {
       console.error("Error adding branch:", error);
       showPopup("error", "❌ Failed to add branch. Try again.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -77,7 +89,10 @@ const AddBranch = ({ onClose, fetchBranches }) => {
         transition={{ duration: 0.4 }}
         className="bg-white p-8 rounded-2xl shadow-lg w-[400px] sm:w-[500px]"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Add New Branch</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Add New Branch
+        </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -124,7 +139,13 @@ const AddBranch = ({ onClose, fetchBranches }) => {
           />
 
           {uploading && (
-            <p className="text-blue-600 text-sm italic">Uploading image...</p>
+            <div className="flex items-center gap-2 text-blue-600 text-sm italic mt-1">
+              <motion.div
+                className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
+                transition={{ repeat: Infinity, duration: 1 }}
+              ></motion.div>
+              Uploading image...
+            </div>
           )}
 
           {branch.imageUrl && (
@@ -143,11 +164,27 @@ const AddBranch = ({ onClose, fetchBranches }) => {
             >
               Cancel
             </button>
+
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              disabled={saving}
+              className={`px-4 py-2 rounded-lg flex items-center justify-center gap-2 text-white font-semibold transition ${
+                saving
+                  ? "bg-blue-400 cursor-not-allowed opacity-80"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Save Branch
+              {saving ? (
+                <>
+                  <motion.div
+                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  ></motion.div>
+                  Saving...
+                </>
+              ) : (
+                "Save Branch"
+              )}
             </button>
           </div>
         </form>

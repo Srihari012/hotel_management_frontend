@@ -7,12 +7,10 @@ import hotelImage3 from "../assets/hotel-image-3.jpg";
 import { useNavigate } from "react-router-dom";
 
 const HomeContent = () => {
-
   const navigate = useNavigate();
 
   return (
     <div className="flex flex-col overflow-hidden">
-      {/* ======================= HERO SECTION ======================= */}
       <section
         className="relative bg-cover bg-center min-h-[80vh] md:h-screen flex flex-col justify-center items-center text-center rounded-xl mt-1"
         style={{
@@ -43,7 +41,6 @@ const HomeContent = () => {
         </motion.div>
       </section>
 
-      {/* ======================= ABOUT + GALLERY SECTION ======================= */}
       <motion.section
         id="about"
         className="h-screen py-16 px-6 md:px-20 bg-gray-50 flex flex-col lg:flex-row items-center justify-center gap-10"
@@ -52,7 +49,6 @@ const HomeContent = () => {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        {/* Left Text */}
         <div className="flex-1 text-center lg:text-left">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
             About Us
@@ -73,9 +69,7 @@ const HomeContent = () => {
           </motion.button>
         </div>
 
-        {/* Right Images */}
         <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
-          {/* Left Column (image1 + image3) */}
           <div className="flex flex-col gap-4">
             <motion.img
               src={hotelImage1}
@@ -91,7 +85,6 @@ const HomeContent = () => {
             />
           </div>
 
-          {/* Right Column (image2) */}
           <motion.img
             src={hotelImage2}
             alt="Hotel 2"
@@ -101,7 +94,6 @@ const HomeContent = () => {
         </div>
       </motion.section>
 
-      {/* ======================= SERVICES + TESTIMONIAL SECTION ======================= */}
       <motion.section
         id="services"
         className="py-16 px-6 md:px-20 bg-white text-center"
@@ -114,7 +106,6 @@ const HomeContent = () => {
           Our Premium Services
         </h2>
 
-        {/* Services Row */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 mb-16">
           {[
             {
@@ -151,8 +142,9 @@ const HomeContent = () => {
           ))}
         </div>
 
-        {/* Testimonials Row */}
-        <h2 className="text-3xl font-bold mb-8 flex justify-center">What Our Guests Say</h2>
+        <h2 className="text-3xl font-bold mb-8 flex justify-center">
+          What Our Guests Say
+        </h2>
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-8">
           {[
             {
@@ -180,21 +172,19 @@ const HomeContent = () => {
         </div>
       </motion.section>
 
-      {/* ======================= CONTACT & FEEDBACK SECTION ======================= */}
       <motion.section
         id="contact"
-        className="py-16 px-6 md:px-20 bg-gray-50 flex flex-col justify-center"
+        className="pb-12 pt-7 px-6 md:px-20 bg-gray-50 flex flex-col justify-center"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-9 text-gray-800">
           Contact Us
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Contact Info */}
           <motion.div
             className="bg-gradient-to-r from-yellow-400 to-yellow-300 text-black p-8 md:p-10 rounded-2xl shadow-lg flex flex-col justify-center"
             whileHover={{ scale: 1.02 }}
@@ -219,12 +209,11 @@ const HomeContent = () => {
               className="mt-8 rounded-xl shadow-md w-full h-60 sm:h-72"
               style={{ border: 0 }}
               loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60355.28569475896!2d73.7272847!3d15.4909307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfc011ec2a7bbf%3A0x20c8b5f00f64e29e!2sGoa!5e0!3m2!1sen!2sin!4v1704720000000!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125322.44173061785!2d76.88483257251708!3d11.014126297388279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859af2f971cb5%3A0x2fc1c81e183ed282!2sCoimbatore%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1762530124031!5m2!1sen!2sin"
               allowFullScreen
             ></iframe>
           </motion.div>
 
-          {/* Feedback Form */}
           <motion.form
             className="bg-white p-6 md:p-8 rounded-2xl shadow-md flex flex-col gap-4"
             onSubmit={(e) => e.preventDefault()}
@@ -262,7 +251,6 @@ const HomeContent = () => {
         </div>
       </motion.section>
 
-      {/* ======================= CTA SECTION ======================= */}
       <motion.section
         className="py-10 bg-yellow-500 text-center"
         initial={{ opacity: 0 }}
@@ -270,10 +258,7 @@ const HomeContent = () => {
         transition={{ duration: 1 }}
         viewport={{ once: true }}
       >
-        <h2
-          className="text-2xl font-bold"
-          onClick={() => navigate("/Booking")}
-        >
+        <h2 className="text-2xl font-bold" onClick={() => navigate("/Booking")}>
           Ready to Book Your Stay?
         </h2>
         <motion.button
@@ -286,7 +271,6 @@ const HomeContent = () => {
         </motion.button>
       </motion.section>
 
-      {/* ======================= FOOTER ======================= */}
       <footer className="bg-gray-900 text-gray-400 py-6 text-center">
         <p>&copy; 2025 Aura Hotels. All Rights Reserved.</p>
       </footer>

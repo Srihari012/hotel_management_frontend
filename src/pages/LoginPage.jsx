@@ -5,14 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-
   const [username, setUsername] = useState("");
   const [Password, setPassword] = useState("");
-
-  // 🔹 Popup State
+  const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState({ show: false, type: "", message: "" });
 
-  // Function to show popup
   const showPopup = (type, message) => {
     setPopup({ show: true, type, message });
     setTimeout(() => setPopup({ show: false, type: "", message: "" }), 2500);
@@ -24,30 +21,31 @@ const LoginPage = () => {
       return;
     }
 
-    axios
-      .post("http://localhost:8080/hotel/user/login", {
-        username: username,
-        password: Password,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          const res = response.data;
-          localStorage.setItem("isAuthenticated", "true");
-          localStorage.setItem("user", JSON.stringify(res));
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "https://hotel-management-backend-7yq5.onrender.com/hotel/user/login",
+        { username: username, password: Password }
+      );
 
-          showPopup("success", "✅ Login Successful!");
-          setTimeout(() => navigate("/home"), 1800); // navigate after success animation
-        } else {
-          showPopup("error", "❌ Login failed. Please check your credentials.");
-        }
-      })
-      .catch((error) => {
-        console.error("Login Error:", error);
-        const msg =
-          error.response?.data ||
-          "❌ Login failed. Please check your credentials.";
-        showPopup("error", msg);
-      });
+      if (response.status === 200) {
+        const res = response.data;
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("user", JSON.stringify(res));
+        showPopup("success", "✅ Login Successful!");
+        setTimeout(() => navigate("/home"), 1800);
+      } else {
+        showPopup("error", "❌ Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      const msg =
+        error.response?.data ||
+        "❌ Login failed. Please check your credentials.";
+      showPopup("error", msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,11 +78,26 @@ const LoginPage = () => {
 
         <motion.button
           onClick={handleLogin}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-sky-900 hover:bg-sky-800 p-4 rounded-2xl text-white font-serif font-semibold transition"
+          whileHover={!loading ? { scale: 1.05 } : {}}
+          whileTap={!loading ? { scale: 0.95 } : {}}
+          disabled={loading}
+          className={`p-4 rounded-2xl text-white font-serif font-semibold transition flex items-center justify-center gap-2 ${
+            loading
+              ? "bg-sky-700 cursor-not-allowed opacity-80"
+              : "bg-sky-900 hover:bg-sky-800"
+          }`}
         >
-          Log In
+          {loading ? (
+            <>
+              <motion.div
+                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                transition={{ repeat: Infinity, duration: 1 }}
+              ></motion.div>
+              Logging in...
+            </>
+          ) : (
+            "Log In"
+          )}
         </motion.button>
 
         <p className="text-sm text-gray-700 mt-2 text-center">

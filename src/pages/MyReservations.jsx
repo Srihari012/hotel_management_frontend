@@ -7,8 +7,6 @@ const MyReservations = () => {
   const [user, setUser] = useState(null);
   const [myReservations, setMyReservations] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // 🔹 New states for popup
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
 
@@ -27,7 +25,7 @@ const MyReservations = () => {
     const fetchReservations = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/hotel/booking/myreservations/${parsedUser.userId}`
+          `https://hotel-management-backend-7yq5.onrender.com/hotel/booking/myreservations/${parsedUser.userId}`
         );
         setMyReservations(response.data);
       } catch (error) {
@@ -40,20 +38,16 @@ const MyReservations = () => {
     fetchReservations();
   }, []);
 
-  // 🔹 When user clicks "Cancel Booking"
   const handleCancelClick = (bookingId) => {
     setSelectedBookingId(bookingId);
     setShowConfirm(true);
   };
 
-  // 🔹 Confirm cancellation
   const confirmCancelBooking = async () => {
     try {
       await axios.put(
-        `http://localhost:8080/hotel/booking/cancel/${selectedBookingId}`
+        `https://hotel-management-backend-7yq5.onrender.com/hotel/booking/cancel/${selectedBookingId}`
       );
-
-      // ✅ Update the state immediately
       setMyReservations((prev) =>
         prev.map((b) =>
           b.bookingId === selectedBookingId
@@ -71,7 +65,6 @@ const MyReservations = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 p-6">
-      {/* PROFILE */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -80,14 +73,12 @@ const MyReservations = () => {
         <div className="h-16 w-16 bg-white rounded-full shadow flex items-center justify-center">
           <User2 size={35} className="text-blue-600" />
         </div>
-
         <div>
           <h2 className="text-2xl font-bold">{user?.username}</h2>
           <p className="text-gray-600">{user?.email}</p>
         </div>
       </motion.div>
 
-      {/* RESERVATIONS */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -96,7 +87,15 @@ const MyReservations = () => {
         <h3 className="text-2xl font-semibold mb-5">My Reservations</h3>
 
         {loading ? (
-          <p className="text-gray-700 text-lg">Loading reservations...</p>
+          <div className="flex flex-col items-center justify-center h-[50vh]">
+            <motion.div
+              className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+              transition={{ repeat: Infinity, ease: "linear", duration: 1 }}
+            ></motion.div>
+            <p className="mt-4 text-gray-700 font-medium text-lg">
+              Loading your reservations...
+            </p>
+          </div>
         ) : myReservations.length === 0 ? (
           <p className="text-gray-700 text-lg">No reservations found.</p>
         ) : (
@@ -134,7 +133,6 @@ const MyReservations = () => {
                   </span>
                 </div>
 
-                {/* Booking Details */}
                 <div
                   className={`mt-3 space-y-2 ${
                     res.status === "cancelled"
@@ -165,7 +163,6 @@ const MyReservations = () => {
                   </p>
                 </div>
 
-                {/* Cancel Button */}
                 <button
                   className={`bg-red-600 p-2 px-6 mt-4 rounded-lg font-serif text-white font-bold hover:bg-red-700 transition ${
                     res.status === "cancelled"
@@ -183,7 +180,6 @@ const MyReservations = () => {
         )}
       </motion.div>
 
-      {/* 🔥 Animated Confirmation Popup */}
       <AnimatePresence>
         {showConfirm && (
           <motion.div

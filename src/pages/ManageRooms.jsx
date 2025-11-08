@@ -6,6 +6,7 @@ import UpdateRoom from "../components/UpdateRoom";
 import axios from "axios";
 import RoomDeleteConfirmation from "../components/RoomDeleteConfirmation";
 import leftarrow from "../assets/leftarrow.png";
+import { motion } from "framer-motion";
 
 const ManageRooms = () => {
   const location = useLocation();
@@ -15,7 +16,8 @@ const ManageRooms = () => {
   const [showAddRoom, setShowAddRoom] = useState(false);
   const [showUpdateRoom, setShowUpdateRoom] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [roomDeleteConfirm, setRoomDeleteConfirm]= useState(false);
+  const [roomDeleteConfirm, setRoomDeleteConfirm] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchRooms();
@@ -23,13 +25,16 @@ const ManageRooms = () => {
 
   const fetchRooms = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
-        `http://localhost:8080/hotel/room?branchId=${branch.branchId}`
+        `https://hotel-management-backend-7yq5.onrender.com/hotel/room?branchId=${branch.branchId}`
       );
       const data = await response.json();
       setRooms(data);
     } catch (err) {
       console.error("Failed to fetch rooms:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,8 +52,10 @@ const ManageRooms = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/hotel/room/${selectedRoom}`);
-      fetchRooms(); // refresh the list after delete
+      await axios.delete(
+        `https://hotel-management-backend-7yq5.onrender.com/hotel/room/${selectedRoom}`
+      );
+      fetchRooms();
       toggleDeleteConfirm();
     } catch (error) {
       console.error("Error deleting room:", error);
@@ -63,7 +70,10 @@ const ManageRooms = () => {
   return (
     <div className="container min-h-screen mx-auto p-1">
       <div className="fixed top-0 left-0 w-full bg-gray-400 rounded-b-2xl p-4 shadow-lg z-10">
-        <div className="absolute left-4 top-4 cursor-pointer" onClick={() => window.history.back()}>
+        <div
+          className="absolute left-4 top-4 cursor-pointer"
+          onClick={() => window.history.back()}
+        >
           <img src={leftarrow} alt="leftarrow" className="w-7 h-13 pt-5" />
         </div>
         <div className="text-center">
@@ -97,7 +107,17 @@ const ManageRooms = () => {
       </div>
 
       <div className="mt-[220px] px-4 max-w-full">
-        {rooms.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col justify-center items-center h-[70vh]">
+            <motion.div
+              className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+              transition={{ repeat: Infinity, ease: "linear", duration: 1 }}
+            ></motion.div>
+            <p className="text-lg font-serif italic text-gray-600 mt-4">
+              Loading rooms...
+            </p>
+          </div>
+        ) : rooms.length === 0 ? (
           <div className="flex flex-col justify-center items-center h-[70vh]">
             <h2 className="text-3xl font-serif font-bold italic text-gray-600">
               No Rooms Available
@@ -109,11 +129,13 @@ const ManageRooms = () => {
         ) : (
           <div className="space-y-4 max-w-7xl mx-auto">
             {rooms.map((room) => (
-              <div
+              <motion.div
                 key={room.roomId}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
                 className="overflow-hidden flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-100 border border-gray-200 rounded-xl shadow-md p-4 sm:p-5 hover:shadow-lg transition-shadow duration-300"
               >
-                {/* Left: Room Details */}
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6 w-full">
                   <p className="text-lg sm:text-xl font-bold text-gray-800">
                     #{room.roomNo}
@@ -151,8 +173,8 @@ const ManageRooms = () => {
                     </button>
                     <button
                       onClick={() => {
-                        toggleDeleteConfirm()
-                        setSelectedRoom(room.roomId)
+                        toggleDeleteConfirm();
+                        setSelectedRoom(room.roomId);
                       }}
                       className="px-4 py-2 rounded-xl bg-red-500 text-white font-medium shadow-md hover:bg-red-600 hover:shadow-lg transition duration-200"
                     >
@@ -160,7 +182,7 @@ const ManageRooms = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
@@ -182,12 +204,12 @@ const ManageRooms = () => {
         />
       )}
 
-      {roomDeleteConfirm &&(
+      {roomDeleteConfirm && (
         <RoomDeleteConfirmation
-        toggleDeleteConfirm={toggleDeleteConfirm}
-        handleDelete={handleDelete}
-      />)
-      }
+          toggleDeleteConfirm={toggleDeleteConfirm}
+          handleDelete={handleDelete}
+        />
+      )}
     </div>
   );
 };
