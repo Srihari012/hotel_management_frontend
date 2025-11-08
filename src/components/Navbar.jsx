@@ -1,5 +1,8 @@
 import React from "react";
 
+import logo from "../assets/logo.png";
+import menuIcon from "../assets/menu.png";
+
 const Navbar = ({ toggleMenu }) => {
   const handleScroll = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -11,7 +14,7 @@ const Navbar = ({ toggleMenu }) => {
   return (
     <div className="bg-gray-300 h-[13%] w-screen rounded-xl flex items-center px-6 z-0">
       <img
-        src="src/assets/logo.png"
+        src={logo}
         alt="logo"
         className="h-30 w-auto sm:mr-10"
       />
@@ -38,7 +41,7 @@ const Navbar = ({ toggleMenu }) => {
       </ul>
 
       <img
-        src="src/assets/menu.png"
+        src={menuIcon}
         alt="menu"
         className="h-12 w-auto ml-auto mr-3 cursor-pointer"
         onClick={toggleMenu}
