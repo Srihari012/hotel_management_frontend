@@ -1,5 +1,4 @@
 import React from "react";
-
 import logo from "../assets/logo.png";
 import menuIcon from "../assets/menu.png";
 
@@ -12,14 +11,14 @@ const Navbar = ({ toggleMenu }) => {
   };
 
   return (
-    <div className="bg-gray-300 h-[13%] w-screen rounded-xl flex items-center px-6 z-0">
+    <div className="bg-gray-300 h-[13%] w-full rounded-xl flex items-center px-2 sm:px-4 z-0 overflow-hidden">
       <img
         src={logo}
         alt="logo"
-        className="h-30 w-auto sm:mr-10"
+        className="h-20 sm:h-15 md:h-25 w-auto sm:mr-10"
       />
 
-      <ul className="flex space-x-8 text-gray-800 font-bold text-lg sm:gap-8 ml-[3%]">
+      <ul className="flex flex-wrap space-x-4 sm:space-x-8 md:space-x-12 text-gray-800 font-bold text-base sm:text-lg ml-[3%]">
         <li
           className="cursor-pointer hover:text-blue-800"
           onClick={() => handleScroll("about")}
@@ -43,7 +42,7 @@ const Navbar = ({ toggleMenu }) => {
       <img
         src={menuIcon}
         alt="menu"
-        className="h-12 w-auto ml-auto mr-3 cursor-pointer"
+        className="h-10 sm:h-12 w-auto ml-auto mr-3 cursor-pointer"
         onClick={toggleMenu}
       />
     </div>
